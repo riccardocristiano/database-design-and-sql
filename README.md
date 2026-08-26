@@ -43,6 +43,9 @@ The conceptual model includes:
 - entity and relationship keys
 
 The E/R model was then converted into a relational schema.
+![Initial E/R model](diagrams/er_model.png)
+
+*Initial E/R model of the restaurant-ordering system.*
 
 ### Modified Design
 
@@ -56,6 +59,10 @@ The second requirement changes `MenuItem` into a **weak entity**, identified thr
 `(RestaurantID, ItemID)`
 
 This required corresponding changes to the relational schema and foreign-key relationships.
+
+![Modified E/R model](diagrams/er_model_modified.png)
+
+*Modified E/R model where `MenuItem` becomes a weak entity identified by `(RestaurantID, ItemID)`.*
 
 ---
 
