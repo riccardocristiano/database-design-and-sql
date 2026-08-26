@@ -4,19 +4,18 @@ Individual take-home project completed for the **DM505 Database Design** course 
 
 ## Overview
 
-This project covers the design and analysis of relational databases, from conceptual modelling to SQL querying and schema normalization.
+This project covers the design and analysis of relational databases, from conceptual E/R modelling to SQL querying, relational algebra, normalization, and indexing.
 
 The work includes:
 
-- E/R modelling and conversion to relational schemas
+- E/R modelling and relational schema design
 - weak entities and ISA hierarchies
-- SQL querying and aggregation
-- joins and nested queries
+- SQL joins, aggregation, and nested queries
 - relational algebra
 - functional dependencies and candidate keys
 - Third Normal Form (3NF)
 - Boyce-Codd Normal Form (BCNF)
-- database indexing
+- PostgreSQL-style indexing
 
 The project combines practical SQL work with the theoretical foundations of relational database design.
 
@@ -24,14 +23,15 @@ The project combines practical SQL work with the theoretical foundations of rela
 
 ## 1. E/R Modelling & Relational Design
 
-The first part of the project models an online restaurant ordering system involving:
+The first part models an online restaurant-ordering system involving:
 
 - users
 - restaurants
 - orders
 - menu items
 - cuisine types
-- meals and beverages
+- meals
+- beverages
 - alcoholic beverages
 
 The conceptual model includes:
@@ -42,35 +42,46 @@ The conceptual model includes:
 - relationship attributes
 - entity and relationship keys
 
-The E/R model was then converted into a relational schema.
+### Initial E/R Model
+
+The initial model represents the relationships between users, orders, restaurants, menu items, and cuisine types, together with the ISA hierarchy connecting `MenuItem`, `Meal`, `Beverage`, and `Alcoholic`.
+
 ![Initial E/R model](diagrams/er_model.png)
 
 *Initial E/R model of the restaurant-ordering system.*
 
+The E/R model was subsequently translated into a relational schema.
+
+The complete relational-model documentation is available here:
+
+[`docs/relational_model.md`](docs/relational_model.md)
+
 ### Modified Design
 
-A second version of the model introduced two additional constraints:
+A second version of the model introduces two additional constraints:
 
 1. Each restaurant belongs to exactly one cuisine type.
-2. A menu-item identifier is unique only within its restaurant.
+2. `ItemID` identifies a menu item only within a particular restaurant.
 
-The second requirement changes `MenuItem` into a **weak entity**, identified through the composite key:
+As a result, cuisine type becomes an attribute of `Restaurant`, while `MenuItem` becomes a **weak entity** dependent on `Restaurant`.
+
+The corresponding composite identifier is:
 
 `(RestaurantID, ItemID)`
-
-This required corresponding changes to the relational schema and foreign-key relationships.
 
 ![Modified E/R model](diagrams/er_model_modified.png)
 
 *Modified E/R model where `MenuItem` becomes a weak entity identified by `(RestaurantID, ItemID)`.*
 
+The corresponding relational schema was also modified so that the composite identifier is propagated to the dependent relations.
+
 ---
 
 ## 2. SQL Queries
 
-The SQL component involved querying a publishing database containing authors, books, genres, and publishers.
+The SQL component uses a publishing database involving authors, books, genres, and publishers.
 
-The exercises required the use of:
+The exercises require the use of:
 
 - `SELECT`
 - `JOIN`
@@ -84,21 +95,25 @@ The exercises required the use of:
 - `ALL`
 - set-based reasoning
 
-Example tasks included:
+Example tasks include:
 
-- counting books by genre
-- finding publishers with at most a specified number of books
-- identifying authors who had not written books in a particular genre
-- finding authors with the maximum and minimum number of published books
+- counting books per genre
+- identifying publishers with at most a specified number of books
+- finding authors who have not written books belonging to a given genre
+- finding authors with the maximum and minimum number of written books
 - comparing publishers according to the number of books they published
+
+The submitted SQL solutions are available here:
+
+[`sql/queries.sql`](sql/queries.sql)
 
 ---
 
 ## 3. Relational Algebra
 
-The project also included translation between **SQL and extended relational algebra**.
+The project also includes translation between **SQL and extended relational algebra**.
 
-Operations included:
+Operations covered include:
 
 - projection
 - selection
@@ -106,9 +121,15 @@ Operations included:
 - outer joins
 - set difference
 - intersection
-- aggregation and grouping
+- grouping
+- aggregation
+- duplicate elimination
 
-This part focused on understanding the relationship between declarative SQL queries and their underlying relational operations.
+This section focuses on the relationship between declarative SQL queries and their underlying relational operations.
+
+The relational-algebra documentation is available here:
+
+[`docs/relational_algebra.md`](docs/relational_algebra.md)
 
 ---
 
@@ -116,7 +137,7 @@ This part focused on understanding the relationship between declarative SQL quer
 
 A relational schema was analysed through its functional dependencies.
 
-The workflow included:
+The workflow includes:
 
 1. identifying non-trivial functional dependencies
 2. computing attribute closures
@@ -126,24 +147,30 @@ The workflow included:
 6. analysing the stricter **BCNF** condition
 7. constructing a BCNF decomposition
 
-One of the key candidate-key computations involved the attribute set:
+The candidate key identified in the submitted analysis is:
 
 `{CuisineType, OrderTime, UserID, ItemID}`
 
-The normalization analysis demonstrated how functional dependencies determine whether a schema contains redundancy and how decomposition can remove structural anomalies.
+The normalization analysis demonstrates how functional dependencies can be used to identify redundancy and restructure a relational schema.
+
+The complete analysis is available here:
+
+[`docs/normalization.md`](docs/normalization.md)
 
 ---
 
 ## 5. Database Indexing
 
-The final part of the project focused on indexing and query optimization using PostgreSQL-style syntax.
+The final part of the project focuses on database indexing using PostgreSQL-style syntax.
 
-Indexes were considered for:
+Indexes were defined for attributes and relations including:
 
-- primary-key attributes
-- junction tables
-- foreign-key relationships
-- columns frequently involved in joins and query predicates
+- publishers
+- books
+- genres
+- authors
+- book–genre relationships
+- book–author relationships
 
 Example:
 
