@@ -1,0 +1,80 @@
+# Relational Algebra
+
+This document summarizes the relational-algebra component of the DM505 Database Design examination.
+
+The exercise involved translating between relational-algebra expressions and SQL, as well as translating SQL statements into extended relational algebra.
+
+## Relational Algebra to SQL
+
+### Query A
+
+```sql
+SELECT *
+FROM T, R
+WHERE T.B > T.C;
+```
+
+### Query B
+
+```sql
+(SELECT B, D FROM S)
+EXCEPT ALL
+(SELECT C, A FROM R);
+```
+
+### Query C
+
+```sql
+(SELECT *
+ FROM T NATURAL LEFT OUTER JOIN S)
+
+INTERSECT ALL
+
+(SELECT *
+ FROM R NATURAL RIGHT OUTER JOIN S);
+```
+
+### Query D
+
+```sql
+SELECT *
+FROM R, S
+WHERE C > D;
+```
+
+### Query E
+
+```sql
+SELECT
+    B,
+    C,
+    SUM(A)
+FROM T
+NATURAL LEFT OUTER JOIN S
+GROUP BY B, C;
+```
+
+---
+
+## SQL to Extended Relational Algebra
+
+The second part of the exercise involved extended relational-algebra expressions using:
+
+- projection
+- conditional joins
+- outer joins
+- duplicate elimination
+- grouping
+- aggregation
+
+The submitted expressions included:
+
+```text
+π[R.A, S.B, C, D] (S RIGHT-OUTER-JOIN[C=D AND R.A>S.A] R)
+
+δ(π[B] (T JOIN[C=3 OR D=3] R))
+
+γ[S.A, SUM(T.C)] (S JOIN[S.B=T.B] T)
+```
+
+In the original submission, a notation clarification was included for the first expression: the arrow used there was intended to denote a **right outer join**.
